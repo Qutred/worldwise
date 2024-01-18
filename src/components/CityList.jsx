@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import {useCities} from '../contexts/CitiesContext'
 import CityItem from './CityItem'
 import styles from './CityList.module.css'
@@ -6,6 +7,7 @@ import Spinner from './Spinner'
 
 const CityList = () => {
   const {cities, isLoading} = useCities()
+
   if (isLoading) return <Spinner />
 
   if (!cities.length)
