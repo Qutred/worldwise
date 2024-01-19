@@ -53,7 +53,22 @@ const CitiesProvider = ({children}) => {
       const data = await res.json()
       setCities(cities => [...cities, data])
     } catch (e) {
-      console.log(`Error loading data ${e.message}`)
+      console.log(`Error creating city ${e.message}`)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const deleteCity = async id => {
+    try {
+      setIsLoading(true)
+      const res = await fetch(`${BASE_URL}/cities/${id}`, {
+        method: 'DELETE',
+      })
+      const data = await res.json()
+      setCities(cities => cities.filter(city => city.id !== id))
+    } catch (e) {
+      console.log(`Error deleting city ${e.message}`)
     } finally {
       setIsLoading(false)
     }
@@ -61,7 +76,7 @@ const CitiesProvider = ({children}) => {
 
   return (
     <CityContext.Provider
-      value={{cities, isLoading, currentCity, getCity, createCity}}>
+      value={{cities, isLoading, currentCity, getCity, deleteCity}}>
       {children}
     </CityContext.Provider>
   )
