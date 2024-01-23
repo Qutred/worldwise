@@ -1,4 +1,10 @@
-import React, {useState, useEffect, useContext, useReducer} from 'react'
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useReducer,
+  useCallback,
+} from 'react'
 import {createContext} from 'react'
 
 const CityContext = createContext()
@@ -66,17 +72,20 @@ const CitiesProvider = ({children}) => {
     fetchCities()
   }, [])
 
-  const getCity = async id => {
-    if (Number(id) === currentCity.id) return
-    try {
-      dispatch({type: 'loading'})
-      const res = await fetch(`${BASE_URL}/cities/${id}`)
-      const data = await res.json()
-      dispatch({type: 'city/loaded', payload: data})
-    } catch (e) {
-      dispatch({type: 'rejected', payload: `Error loading city ${e.message}`})
-    }
-  }
+  const getCity = useCallback(
+    async id => {
+      if (Number(id) === currentCity.id) return
+      try {
+        dispatch({type: 'loading'})
+        const res = await fetch(`${BASE_URL}/cities/${id}`)
+        const data = await res.json()
+        dispatch({type: 'city/loaded', payload: data})
+      } catch (e) {
+        dispatch({type: 'rejected', payload: `Error loading city ${e.message}`})
+      }
+    },
+    [currentCity.id]
+  )
 
   const createCity = async newCity => {
     try {
